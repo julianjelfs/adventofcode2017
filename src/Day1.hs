@@ -2,31 +2,23 @@ module Day1 where
 
 import           Data.Char
 
-partOne :: String -> Int
-partOne inp =
-  let l = fmap digitToInt inp
-  in snd $
-     foldl
-       (\(prev, total) next ->
-          if next == prev
-            then (next, total + prev)
-            else (next, total))
-       (head $ reverse l, 0)
-       l
-
 halfway :: Int -> Int -> Int
 halfway i l =
     mod (i + (div l 2)) l
 
-partTwo :: String -> Int
-partTwo inp =
+nextIndex :: Int -> Int -> Int
+nextIndex i l =
+    mod (i + 1) l
+
+solve :: String -> (Int -> Int -> Int) -> Int
+solve inp indexFinder =
   let
     l = fmap digitToInt inp
     len = length l
   in snd $
     foldl
         (\(i, total) next ->
-            if next == (l !! (halfway i len)) then
+            if next == (l !! (indexFinder i len)) then
                 (i+1, total + next)
             else
                 (i+1, total)
@@ -42,12 +34,12 @@ partOneTests =
 partTwoTests =
     [("1212",6), ("1221",0), ("123425", 4), ("123123", 12), ("12131415", 4)]
 
-test solver tests =
-    all (\(i, exp) -> solver i == exp) tests
+test tests indexFinder =
+    all (\(i, exp) -> solve i indexFinder == exp) tests
 
 testPartOne =
-    test partOne partOneTests
+    test partOneTests nextIndex
 
 testPartTwo =
-    test partTwo partTwoTests
+    test partTwoTests halfway
 
