@@ -30,7 +30,7 @@ version = Version [0,1,0,0] []
 bindir, libdir, dynlibdir, datadir, libexecdir, sysconfdir :: FilePath
 
 bindir     = "C:\\Users\\jjelfs\\projects\\adventofcode2017\\.stack-work\\install\\3573363d\\bin"
-libdir     = "C:\\Users\\jjelfs\\projects\\adventofcode2017\\.stack-work\\install\\3573363d\\lib\\x86_64-windows-ghc-8.0.2\\adventofcode2017-0.1.0.0-2IjoveVYiAw76aJZOyaNQE"
+libdir     = "C:\\Users\\jjelfs\\projects\\adventofcode2017\\.stack-work\\install\\3573363d\\lib\\x86_64-windows-ghc-8.0.2\\adventofcode2017-0.1.0.0-BP6cmhiVFm6CkxjBQIHPmT"
 dynlibdir  = "C:\\Users\\jjelfs\\projects\\adventofcode2017\\.stack-work\\install\\3573363d\\lib\\x86_64-windows-ghc-8.0.2"
 datadir    = "C:\\Users\\jjelfs\\projects\\adventofcode2017\\.stack-work\\install\\3573363d\\share\\x86_64-windows-ghc-8.0.2\\adventofcode2017-0.1.0.0"
 libexecdir = "C:\\Users\\jjelfs\\projects\\adventofcode2017\\.stack-work\\install\\3573363d\\libexec"

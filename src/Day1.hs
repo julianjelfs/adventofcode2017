@@ -1,6 +1,7 @@
 module Day1 where
 
 import           Data.Char
+import           Criterion.Main
 
 halfway :: Int -> Int -> Int
 halfway i l =
@@ -42,4 +43,10 @@ testPartOne =
 
 testPartTwo =
     test partTwoTests halfway
+
+main = defaultMain [
+    bgroup "day1" [ bench "part1" $ whnf (solve inputStr) nextIndex
+                  , bench "part2" $ whnf (solve inputStr) halfway
+                  ]
+    ]
 
