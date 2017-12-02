@@ -14,6 +14,13 @@
   (major1) == 4 && (major2) <  9 || \
   (major1) == 4 && (major2) == 9 && (minor) <= 1)
 
+/* package criterion-1.1.4.0 */
+#define VERSION_criterion "1.1.4.0"
+#define MIN_VERSION_criterion(major1,major2,minor) (\
+  (major1) <  1 || \
+  (major1) == 1 && (major2) <  1 || \
+  (major1) == 1 && (major2) == 1 && (minor) <= 4)
+
 /* tool gcc-5.2.0 */
 #define TOOL_VERSION_gcc "5.2.0"
 #define MIN_TOOL_VERSION_gcc(major1,major2,minor) (\
@@ -63,7 +70,7 @@
   (major1) == 2 && (major2) <  25 || \
   (major1) == 2 && (major2) == 25 && (minor) <= 0)
 
-#define CURRENT_COMPONENT_ID "adventofcode2017-0.1.0.0-2IjoveVYiAw76aJZOyaNQE"
+#define CURRENT_COMPONENT_ID "adventofcode2017-0.1.0.0-BP6cmhiVFm6CkxjBQIHPmT"
 
-#define CURRENT_PACKAGE_KEY "adventofcode2017-0.1.0.0-2IjoveVYiAw76aJZOyaNQE"
+#define CURRENT_PACKAGE_KEY "adventofcode2017-0.1.0.0-BP6cmhiVFm6CkxjBQIHPmT"
 
