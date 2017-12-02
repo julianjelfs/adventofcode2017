@@ -5,10 +5,10 @@ import           Data.Char
 numbers :: IO [[Int]]
 numbers = do
   inp <- readFile "data/day2.txt"
-  return $ sanitise inp
+  return $ parse inp
 
-sanitise :: String -> [[Int]]
-sanitise = ((fmap . fmap) read) . (fmap words) . lines
+parse :: String -> [[Int]]
+parse = ((fmap . fmap) read) . (fmap words) . lines
 
 diff :: [Int] -> Int
 diff row = (maximum row) - (minimum row)
