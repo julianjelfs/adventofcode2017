@@ -14,8 +14,7 @@ diff :: [Int] -> Int
 diff row = (maximum row) - (minimum row)
 
 divisible :: [Int] -> Int
-divisible row =
-  head [(div x y) | x <- row, y <- row, x /= y, rem x y == 0]
+divisible row = head [(div x y) | x <- row, y <- row, x /= y, rem x y == 0]
 
 partOne :: IO Int
 partOne = solve diff
@@ -27,4 +26,3 @@ solve :: ([Int] -> Int) -> IO Int
 solve mapWith = do
   n <- numbers
   return $ sum $ fmap mapWith n
-
