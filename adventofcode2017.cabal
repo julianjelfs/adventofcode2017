@@ -19,6 +19,7 @@ library
   exposed-modules:     Day1, Day2, Day3
   build-depends:       base >= 4.7 && < 5
                      , criterion
+                     , containers
   default-language:    Haskell2010
 
 source-repository head

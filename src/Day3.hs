@@ -1,6 +1,7 @@
 module Day3 where
 
 import           Data.Bifunctor
+import qualified Data.Map as Map
 
 --there's definitely a pure maths way to do this but I can't
 --17  16  15  14  13
@@ -8,9 +9,7 @@ import           Data.Bifunctor
 --19   6   1   2  11
 --20   7   8   9  10
 --21  22  23---> ...
-
 --continue in the same direction until either coordinate is beyond the range you have visited before
-
 data Direction
   = West
   | East
@@ -21,8 +20,9 @@ data Direction
 type Coordinates = (Int, Int)
 
 data Range =
-  Range (Int, Int) (Int, Int)
-  deriving Show
+  Range (Int, Int)
+        (Int, Int)
+  deriving (Show)
 
 type Value = Int
 
@@ -31,9 +31,11 @@ data MoveState =
             Coordinates
             Direction
             Value
+            (Map.Map Coordinates Value)
   deriving (Show)
 
 dec = \n -> n - 1
+
 inc = \n -> n + 1
 
 move :: Direction -> Coordinates -> Coordinates
@@ -59,19 +61,54 @@ updateRange :: Coordinates -> Range -> Range
 updateRange (x, y) (Range (minX, minY) (maxX, maxY)) =
   Range (min minX x, min minY y) (max maxX x, max maxY y)
 
+sumOfSurroundingCells :: Coordinates -> Map.Map Coordinates Value -> Int
+sumOfSurroundingCells c s =
+  foldr
+    (\mv total ->
+       case mv of
+         Just v  -> total + v
+         Nothing -> total)
+    0
+    (fmap (\c1 -> Map.lookup c1 s) (surroundingCells c))
+
+surroundingCells :: Coordinates -> [Coordinates]
+surroundingCells (x, y) =
+  [ (x + 1, y)
+  , (x + 1, y + 1)
+  , (x + 1, y - 1)
+  , (x - 1, y)
+  , (x - 1, y + 1)
+  , (x - 1, y - 1)
+  , (x, y + 1)
+  , (x, y - 1)
+  ]
+
 findCoordinate :: Value -> MoveState -> MoveState
-findCoordinate target (MoveState r c d v)
-  | target == v = MoveState r c d v
+findCoordinate target (MoveState r c d v s)
+  | v >= target = MoveState r c d v s
   | otherwise =
-    let
-      d1 = if shouldChangeDirection c r then changeDirection d else d
-      r1 = updateRange c r
-    in
-      findCoordinate target (MoveState r1 (move d1 c) d1 (v+1))
+    let d1 =
+          if shouldChangeDirection c r
+            then changeDirection d
+            else d
+        r1 = updateRange c r
+        c1 = move d1 c
+        v1 = sumOfSurroundingCells c1 s
+        s1 = Map.insert c1 v1 s
+    in findCoordinate target (MoveState r1 c1 d1 v1 s1)
 
 solve :: Value -> Int
 solve target =
-  let
-    (MoveState r c d v) = findCoordinate target (MoveState (Range (0,0) (0,0)) (0,0) East 1)
-  in
-    manhattanDistance (0,0) c
+  let (MoveState r c d v s) =
+        findCoordinate
+          target
+          initialState
+  in v
+
+initialState = (MoveState (Range (0, 0) (0, 0)) (0, 0) East 1 (Map.insert (0,0) 1 Map.empty))
+
+--147  142  133  122   59
+--304    5    4    2   57
+--330   10    1    1   54
+--351   11   23   25   26
+--362  747  806--->   ...
