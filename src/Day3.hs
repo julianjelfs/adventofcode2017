@@ -1,15 +1,9 @@
 module Day3 where
 
 import           Data.Bifunctor
-import qualified Data.Map as Map
+import qualified Data.Map       as Map
+import           Data.Maybe
 
---there's definitely a pure maths way to do this but I can't
---17  16  15  14  13
---18   5   4   3  12
---19   6   1   2  11
---20   7   8   9  10
---21  22  23---> ...
---continue in the same direction until either coordinate is beyond the range you have visited before
 data Direction
   = West
   | East
@@ -63,13 +57,7 @@ updateRange (x, y) (Range (minX, minY) (maxX, maxY)) =
 
 sumOfSurroundingCells :: Coordinates -> Map.Map Coordinates Value -> Int
 sumOfSurroundingCells c s =
-  foldr
-    (\mv total ->
-       case mv of
-         Just v  -> total + v
-         Nothing -> total)
-    0
-    (fmap (\c1 -> Map.lookup c1 s) (surroundingCells c))
+  sum $ catMaybes $ (fmap (\c1 -> Map.lookup c1 s) (surroundingCells c))
 
 surroundingCells :: Coordinates -> [Coordinates]
 surroundingCells (x, y) =
@@ -99,16 +87,8 @@ findCoordinate target (MoveState r c d v s)
 
 solve :: Value -> Int
 solve target =
-  let (MoveState r c d v s) =
-        findCoordinate
-          target
-          initialState
+  let (MoveState r c d v s) = findCoordinate target initialState
   in v
 
-initialState = (MoveState (Range (0, 0) (0, 0)) (0, 0) East 1 (Map.insert (0,0) 1 Map.empty))
-
---147  142  133  122   59
---304    5    4    2   57
---330   10    1    1   54
---351   11   23   25   26
---362  747  806--->   ...
+initialState =
+  (MoveState (Range (0, 0) (0, 0)) (0, 0) East 1 (Map.insert (0, 0) 1 Map.empty))
