@@ -3,19 +3,14 @@ module Day4 where
 import qualified Data.Set as S
 import Data.List
 
-phrases :: (String -> [[String]]) -> IO [[String]]
-phrases parser = do
-  inp <- readFile "data/day4.txt"
-  return $ parser inp
-
 noDuplicates :: [String] -> Bool
 noDuplicates p =
   length p == (length (S.fromList p))
 
 countValid :: (String -> [[String]]) -> IO Int
 countValid parser = do
-  p <- phrases parser
-  return $ length $ filter noDuplicates p
+  inp <- readFile "data/day4.txt"
+  return $ length $ filter noDuplicates $ parser inp
 
 partOne :: IO Int
 partOne =
