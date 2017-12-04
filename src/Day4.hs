@@ -2,6 +2,7 @@ module Day4 where
 
 import qualified Data.Set as S
 import Data.List
+import Debug.Trace
 
 type Policy = [String] -> Bool
 
@@ -26,7 +27,7 @@ noAnagrams p =
 
 anagrams :: [String] -> [(String, String)]
 anagrams p =
-    [(x, y) | x <- p, y <- p, x /= y, isAnagram x y]
+    [(x, y) | x <- p, y <- p, x /= y, y /= x, isAnagram x y]
 
 countValid :: Policy -> IO Int
 countValid policy = do
@@ -49,4 +50,4 @@ partTwo :: IO Int
 partTwo =
   countValid noAnagrams
 
-testRow = words "xbmaf iceyqqq sabpt gliexel muubepe qqiyqce fmrcc eazk obkeonl fmccr kgk"
+testRow = words "iiii oiii ooii oooi oooo"
