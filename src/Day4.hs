@@ -36,15 +36,7 @@ anagrams p =
 countValid :: Policy -> IO Int
 countValid policy = do
   p <- phrases
-  return
-    (sum $
-      fmap
-        (\p ->
-          if policy p then
-            1
-          else
-            0
-        ) p)
+  return $ length $ filter policy p
 
 partOne :: IO Int
 partOne =
