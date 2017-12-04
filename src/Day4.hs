@@ -25,6 +25,10 @@ noAnagrams :: Policy
 noAnagrams p =
   length (anagrams p) == 0
 
+both :: Policy
+both p =
+    (noDuplicates p) && (noAnagrams p)
+
 anagrams :: [String] -> [(String, String)]
 anagrams p =
     [(x, y) | x <- p, y <- p, x /= y, y /= x, isAnagram x y]
@@ -48,6 +52,4 @@ partOne =
 
 partTwo :: IO Int
 partTwo =
-  countValid noAnagrams
-
-testRow = words "iiii oiii ooii oooi oooo"
+  countValid both
