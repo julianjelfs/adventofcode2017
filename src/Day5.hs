@@ -16,7 +16,8 @@ solve incrementor (n, i, v) =
     else
         let
             (i1, v1) = jump incrementor i v
-        in solve incrementor (n + 1, i1, v1)
+            n1 = n + 1
+        in solve incrementor $! (n1, i1, v1)
 
 partOne :: IO Int
 partOne = do
