@@ -12,11 +12,15 @@ category:            Web
 build-type:          Simple
 extra-source-files:  README.md
                    , data/day2.txt
+                   , data/day4.txt
+                   , data/day5.txt
 cabal-version:       >=1.10
 
-library
+executable adventofcode
   hs-source-dirs:      src
-  exposed-modules:     Day1, Day2, Day3, Day4, Day5
+  exposed-modules:   Day1, Day2, Day3, Day4, Day5
+  other-modules:     Day1, Day2, Day3, Day4, Day5
+  main-is:           Main.hs
   build-depends:       base >= 4.7 && < 5
                      , criterion
                      , containers

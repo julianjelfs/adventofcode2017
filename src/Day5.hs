@@ -16,8 +16,9 @@ solve incrementor (n, i, v) =
     else
         let
             (i1, v1) = jump incrementor i v
-            n1 = n + 1
-        in solve incrementor $! (n1, i1, v1)
+            n1 = succ n
+            arg = (n1 `seq` n1, i1 `seq` i1, v1 `seq` v1)
+        in (solve incrementor) (arg `seq` arg)
 
 partOne :: IO Int
 partOne = do
