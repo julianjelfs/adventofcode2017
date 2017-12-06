@@ -2,7 +2,7 @@ module Day6 where
 
 import qualified Data.Vector as V
 import Data.Ord
-import qualified Data.Set as S
+import qualified Data.Map.Strict as M
 
 input = V.fromList [0,5,10,0,11,14,13,4,11,8,8,7,1,4,12,11]
 testInput = V.fromList [0,2,7,0]
@@ -23,15 +23,13 @@ findCycle previous v cycles =
   let
     v1 = balance v
   in
-    if S.member v1 previous then
-      cycles
+    if M.member v1 previous then
+      (cycles, cycles - (previous M.! v1))
     else
-      findCycle (S.insert v1 previous) v1 (cycles + 1)
+      findCycle (M.insert v1 cycles previous) v1 (cycles + 1)
 
-partOne =
-  findCycle S.empty input 1
+solve =
+  findCycle M.empty input 1
 
 next i v =
   mod (i + 1) (length v)
-
-
