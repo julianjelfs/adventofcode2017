@@ -1,6 +1,8 @@
 module Day7 where
 
 import Data.List.Split
+import Data.List
+import Data.Ord
 
 type Name = String
 type Weight = Int
@@ -18,7 +20,7 @@ removeCommas ws =
 parse :: IO [Node]
 parse = do
   --inp <- readFile "data/day7.txt"
-  inp <- readFile "data/day7test.txt"
+  inp <- readFile "data/day7.txt"
   return $ fmap (lineToNode . removeCommas . words) $ lines inp
 
 lineToNode :: [String] -> Node
@@ -37,7 +39,7 @@ findNode nodes node =
 
 isRoot :: [Node] -> Node -> Bool
 isRoot nodes node =
-  (length $ filter (\n -> isChildOf node n) nodes) == 0
+  (length $ filter (isChildOf node) nodes) == 0
 
 getRoot nodes =
     head $ filter (isRoot nodes) nodes
@@ -46,12 +48,37 @@ partOne = do
   nodes <- parse
   return $ buildTree nodes $ getRoot nodes
 
+partTwo = do
+  nodes <- parse
+  let tree = buildTree nodes $ getRoot nodes
+  return $ findWonkyNode tree
+
 buildTree nodes (Node n w []) = Node n w []
 buildTree nodes (Node n w children) =
     Node n w (fmap (replaceChild nodes) children)
 
 replaceChild nodes node =
     buildTree nodes (findNode nodes node)
+
+totalWeight :: Node -> Int
+totalWeight (Node _ w children) =
+    w + (sum $ (fmap totalWeight children))
+
+--this doesn't work because it finds the highest wonky node,
+--I need the lowest - duh
+findWonkyNode (Node n w c) =
+    let
+        childWeights = zip (fmap totalWeight c) c
+        (min, max) = (minimumBy (comparing fst) childWeights, maximumBy (comparing fst) childWeights)
+    in
+        if min /= max then
+            ((n, w), fmap (\(Node n1 w1 c) -> (n1, w1, totalWeight (Node n1 w1 c))) c)
+        else
+            head $ (fmap findWonkyNode c)
+
+
+
+
 
 
 
