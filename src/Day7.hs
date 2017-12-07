@@ -34,15 +34,15 @@ isChildOf :: Node -> Node -> Bool
 isChildOf (Node name _ _) (Node _ _ children) =
   elem name (fmap (\(Node name _ _) -> name) children)
 
-findParents :: [Node] -> [(Node, Maybe Node)]
-findParents nodes =
-  fmap (findParent nodes) nodes
-
-findParent :: [Node] -> Node -> (Node, Maybe Node)
-findParent nodes child =
-  case filter (\n -> isChildOf child n) nodes of
-    (x : xs) -> (child, Just x)
-    [] -> (child, Nothing)
+--findParents :: [Node] -> [(Node, Maybe Node)]
+--findParents nodes =
+--  fmap (findParent nodes) nodes
+--
+--findParent :: [Node] -> Node -> (Node, Maybe Node)
+--findParent nodes child =
+--  case filter (\n -> isChildOf child n) nodes of
+--    (x : xs) -> (child, Just x)
+--    [] -> (child, Nothing)
 
 isRoot :: [Node] -> Node -> Bool
 isRoot nodes node =
@@ -52,7 +52,6 @@ isRoot nodes node =
 solve = do
   nodes <- parse
   let h = head nodes
-  --return $ fmap (\n -> (n, isChildOf h n)) nodes
   return $ filter (\(n, r) -> r) $ fmap (\n -> (n, isRoot nodes n)) nodes
 
 
