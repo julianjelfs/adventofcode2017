@@ -51,7 +51,7 @@ partOne = do
 partTwo = do
   nodes <- parse
   let tree = buildTree nodes $ getRoot nodes
-  return $ findWonkyNode tree
+  return $ findWonkyNode 0 tree
 
 buildTree nodes (Node n w []) = Node n w []
 buildTree nodes (Node n w children) =
@@ -64,17 +64,18 @@ totalWeight :: Node -> Int
 totalWeight (Node _ w children) =
     w + (sum $ (fmap totalWeight children))
 
---this doesn't work because it finds the highest wonky node,
---I need the lowest - duh
-findWonkyNode (Node n w c) =
+findWonkyNode adjustBy (Node n w []) =
+    w - adjustBy
+findWonkyNode adjustBy (Node n w c) =
     let
         childWeights = zip (fmap totalWeight c) c
         (min, max) = (minimumBy (comparing fst) childWeights, maximumBy (comparing fst) childWeights)
+        (minw, maxw) = (fst min, fst max)
     in
-        if min /= max then
-            ((n, w), fmap (\(Node n1 w1 c) -> (n1, w1, totalWeight (Node n1 w1 c))) c)
+        if minw /= maxw then
+            findWonkyNode (maxw - minw) (snd max)
         else
-            head $ (fmap findWonkyNode c)
+            w - adjustBy
 
 
 
