@@ -26,6 +26,7 @@ executable adventofcode
                      , containers
                      , vector
                      , regex-pcre-builtin
+                     , split
   default-language:    Haskell2010
 
 source-repository head
