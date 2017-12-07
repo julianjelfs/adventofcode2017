@@ -14,16 +14,18 @@ extra-source-files:  README.md
                    , data/day2.txt
                    , data/day4.txt
                    , data/day5.txt
+                   , data/day7.txt
 cabal-version:       >=1.10
 
 executable adventofcode
   hs-source-dirs:      src
-  other-modules:     Day1, Day2, Day3, Day4, Day5, Day6
+  other-modules:     Day1, Day2, Day3, Day4, Day5, Day6, Day7
   main-is:           Main.hs
   build-depends:       base >= 4.7 && < 5
                      , criterion
                      , containers
                      , vector
+                     , regex-pcre-builtin
   default-language:    Haskell2010
 
 source-repository head
