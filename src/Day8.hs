@@ -41,9 +41,8 @@ withDefault m k d =
 
 foldInstruction (m, highest) (Inst s t o p) =
   let targetVal = withDefault m t 0
-      sourceVal = withDefault m s 0
   in if p targetVal
-       then let updatedSource = o sourceVal
+       then let updatedSource = o (withDefault m s 0)
             in (M.insert s updatedSource m, (max updatedSource highest))
        else (m, highest)
 
