@@ -1,11 +1,10 @@
 module Day4 where
 
-import qualified Data.Set as S
-import Data.List
+import           Data.List
+import qualified Data.Set  as S
 
 noDuplicates :: [String] -> Bool
-noDuplicates p =
-  length p == (length (S.fromList p))
+noDuplicates p = length p == (length (S.fromList p))
 
 countValid :: (String -> [[String]]) -> IO Int
 countValid parser = do
@@ -13,9 +12,7 @@ countValid parser = do
   return $ length $ filter noDuplicates $ parser inp
 
 partOne :: IO Int
-partOne =
-  countValid $ (fmap words) . lines
+partOne = countValid $ (fmap words) . lines
 
 partTwo :: IO Int
-partTwo =
-  countValid $ ((fmap . fmap) sort) . (fmap words) . lines
+partTwo = countValid $ ((fmap . fmap) sort) . (fmap words) . lines
