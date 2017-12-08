@@ -1,7 +1,6 @@
 module Day8 where
 
 import qualified Data.Map.Strict as M
-import           Data.Ord
 
 type Source = String
 
@@ -16,9 +15,6 @@ data Inst =
        Target
        Op
        Pred
-
-instance Show Inst where
-  show (Inst s t o p) = "Source: " ++ s ++ " Target: " ++ t
 
 parse = do
   inp <- readFile "data/day8.txt"
@@ -55,12 +51,8 @@ foldInstruction (m, highest) (Inst s t o p) =
             in (M.insert s updatedSource m, newHighest)
        else (m, highest)
 
-partOne = do
+solve = do
   instructions <- parse
   let m = foldl foldInstruction (M.empty, 0) instructions
-  return $ maximum $ M.elems $ fst m
-
-partTwo = do
-  instructions <- parse
-  let m = foldl foldInstruction (M.empty, 0) instructions
-  return $ snd m
+  putStrLn $ show $ maximum $ M.elems $ fst m
+  putStrLn $ show $ snd m
