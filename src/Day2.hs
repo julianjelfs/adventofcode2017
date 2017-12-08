@@ -1,6 +1,10 @@
+{-# LANGUAGE FlexibleContexts #-}
+
 module Day2 where
 
+import           Common
 import           Data.Char
+import qualified Text.Parsec as P
 
 numbers :: IO [[Int]]
 numbers = do
@@ -8,7 +12,10 @@ numbers = do
   return $ parse inp
 
 parse :: String -> [[Int]]
-parse = ((fmap . fmap) read) . (fmap words) . lines
+parse inp =
+  case P.parse fileParser "day2.txt" inp of
+    Right v  -> v
+    Left err -> error "Parse error"
 
 diff :: [Int] -> Int
 diff row = (maximum row) - (minimum row)
@@ -26,3 +33,7 @@ solve :: ([Int] -> Int) -> IO Int
 solve mapWith = do
   n <- numbers
   return $ sum $ fmap mapWith n
+
+rowParser = P.sepBy numberParser P.tab
+
+fileParser = P.sepBy rowParser P.newline
