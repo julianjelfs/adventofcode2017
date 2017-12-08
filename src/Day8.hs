@@ -44,11 +44,7 @@ foldInstruction (m, highest) (Inst s t o p) =
       sourceVal = withDefault m s 0
   in if p targetVal
        then let updatedSource = o sourceVal
-                newHighest =
-                  if updatedSource > highest
-                    then updatedSource
-                    else highest
-            in (M.insert s updatedSource m, newHighest)
+            in (M.insert s updatedSource m, (max updatedSource highest))
        else (m, highest)
 
 solve = do
