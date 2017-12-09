@@ -43,25 +43,31 @@ testLine = "j inc 19"
 wordParser = P.many P.anyChar
 
 instructionParser =
-   Instr
-    <$> (wordParser <* space)
-    <*> (opParser <* space)
-    <*> (numberParser)
+  Instr <$> (wordParser <* space) <*> (opParser <* space) <*> (numberParser)
 
 space = P.char ' '
 
-opParser =
-  chooseOp <$> (P.choice [P.string "inc", P.string "dec"])
-  where chooseOp "inc" = Inc
-        chooseOp "dec" = Dec
+opParser = chooseOp <$> (P.choice [P.string "inc", P.string "dec"])
+  where
+    chooseOp "inc" = Inc
+    chooseOp "dec" = Dec
 
 --compParser =
 --  chooseOp <$> (P.choice [P.string ">=", P.string "<="])
 --  where chooseOp ">=" = GE
 --        chooseOp "<=" = LE
+data Instr =
+  Instr String
+        Op
+        Int
+  deriving (Show)
 
-data Instr = Instr String Op Int deriving Show
+data Op
+  = Inc
+  | Dec
+  deriving (Show)
 
-data Op = Inc | Dec deriving Show
-
-data Comp = GE | LE deriving Show
+data Comp
+  = GE
+  | LE
+  deriving (Show)
