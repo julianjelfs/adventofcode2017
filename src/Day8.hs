@@ -34,15 +34,10 @@ parsePred "==" v = \n -> n == v
 parsePred "<=" v = \n -> n <= v
 parsePred "!=" v = \n -> n /= v
 
-withDefault m k d =
-  case M.member k m of
-    True  -> m M.! k
-    False -> d
-
 foldInstruction (m, highest) (Inst s t o p) =
-  let targetVal = withDefault m t 0
+  let targetVal = maybe 0 id (M.lookup t m)
   in if p targetVal
-       then let updatedSource = o (withDefault m s 0)
+       then let updatedSource = o (maybe 0 id (M.lookup s m))
             in (M.insert s updatedSource m, (max updatedSource highest))
        else (m, highest)
 
