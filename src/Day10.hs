@@ -4,7 +4,7 @@ import           Data.Bits       (xor)
 import           Data.Char       (ord)
 import           Data.List.Split
 import           Data.Vector     (fromList, toList, (!), (//))
-import           Numeric         (showHex)
+import           Text.Printf     (printf)
 
 lengths = "94,84,0,79,2,27,81,1,123,93,218,23,103,255,254,243"
 
@@ -17,16 +17,12 @@ parseAscii str =
 
 partOne = foldl hash (input, 0, 0) $ parse lengths
 
-padleft str
-  | length str == 1 = "0" ++ str
-  | otherwise = str
-
 partTwo =
   let (v, _, _) = foldl hash (input, 0, 0) $ parseAscii lengths
       chunked = chunksOf 16 (toList v)
-      hex =
-        fmap ((\n -> padleft $ showHex n "") . foldl xor (0 :: Integer)) chunked
-  in foldl (++) mempty hex
+  in foldl (++) mempty $ fmap hexify chunked
+  where
+    hexify = ((printf "%02x" :: Integer -> String) . foldl xor (0 :: Integer))
 
 hash (v, pos, skip) l =
   (replaceSlice v pos l, wrapIndex 256 $ pos + l + skip, skip + 1)
