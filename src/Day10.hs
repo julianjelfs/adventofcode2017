@@ -25,12 +25,12 @@ partTwo =
     hexify = ((printf "%02x" :: Integer -> String) . foldl xor (0 :: Integer))
 
 hash (v, pos, skip) l =
-  (replaceSlice v pos l, wrapIndex 256 $ pos + l + skip, skip + 1)
+  (replaceSlice v pos l, wrapIndex $ pos + l + skip, skip + 1)
 
-wrapIndex l n = mod n l
+wrapIndex n = mod n $ length input
 
 replaceSlice v from n =
-  let indices = fmap (wrapIndex $ length v) [from .. (from + n - 1)]
+  let indices = fmap wrapIndex [from .. (from + n - 1)]
       slice = fmap (v !) indices
       reversed = zip indices (reverse slice)
   in foldl (\v p -> v // [p]) v reversed
