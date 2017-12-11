@@ -2,6 +2,7 @@ module Day10 where
 
 import           Data.Bits       (xor)
 import           Data.Char       (ord)
+import           Data.List
 import           Data.List.Split
 import           Data.Vector     (fromList, toList, (!), (//))
 import           Text.Printf     (printf)
