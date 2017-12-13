@@ -7,5 +7,7 @@ import           Day13
 
 main :: IO ()
 main = do
-  n <- Day13.partTwo
-  putStrLn ("Solution " ++ (show n))
+  one <- Day13.partOne
+  two <- Day13.partTwo
+  putStrLn ("Solution " ++ (show one))
+  putStrLn ("Solution " ++ (show two))
