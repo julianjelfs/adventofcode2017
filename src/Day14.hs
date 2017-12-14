@@ -30,13 +30,15 @@ countGroups n coords
     | length coords == 0 = n
     | otherwise =
         let h = (head . S.toList) coords
-        in countGroups (n + 1) $ S.difference coords $ S.fromList $ neighbours coords h
+            g = S.fromList $ neighbours coords h
+        in countGroups (n + 1) $ S.difference coords g
 
 neighbours :: Coords -> (Int, Int) -> [(Int, Int)]
 neighbours coords (x, y) =
     (x, y) : (concatMap (neighbours updatedCoords) $ around)
     where around = filter (\c -> S.member c coords) [(x+1, y), (x-1, y), (x, y+1), (x, y-1)]
-          updatedCoords = S.difference coords $ S.fromList [(x, y)]
+          withoutNeighbours = S.difference coords $ S.fromList around
+          updatedCoords = S.difference withoutNeighbours $ S.fromList [(x, y)]
 
 hexToBinary c =
   case (readHex::String -> [(Int, String)]) [c] of
