@@ -19,7 +19,10 @@ parseAscii str =
 partOne = foldl hash (input, 0, 0) $ parse lengths
 
 partTwo =
-  let (v, _, _) = foldl hash (input, 0, 0) $ parseAscii lengths
+  doHash lengths
+
+doHash str =
+  let (v, _, _) = foldl hash (input, 0, 0) $ parseAscii str
       chunked = chunksOf 16 (toList v)
   in foldl (++) mempty $ fmap hexify chunked
   where
