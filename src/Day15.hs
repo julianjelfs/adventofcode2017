@@ -21,9 +21,8 @@ partTwo = countMatches a b
 countMatches a b =
   sum $ zipWith (\a b -> if a == b then 1 else 0) a b
 
-generate g = fmap (toBinary . fst) $ drop 1 $ scanl' gen g [0 .. ]
-  where
-    gen (prev, factor) _ = (rem (prev * factor) 2147483647, factor)
+generate (seed, factor) =
+    drop 1 $ unfoldr (\b -> Just (toBinary b, rem (b * factor) 2147483647)) seed
 
 toBinary :: Integer -> Integer
 toBinary n = (.&. 0xffff) n
