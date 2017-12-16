@@ -2,7 +2,7 @@
 
 module Day2 where
 
-import           Common
+import qualified Common as C
 import           Data.Char
 import qualified Text.Parsec as P
 
@@ -13,7 +13,7 @@ numbers = do
 
 parse :: String -> [[Int]]
 parse inp =
-  case P.parse fileParser "day2.txt" inp of
+  case C.parse fileParser inp of
     Right v  -> v
     Left err -> error "Parse error"
 
@@ -34,40 +34,6 @@ solve mapWith = do
   n <- numbers
   return $ sum $ fmap mapWith n
 
-rowParser = P.sepBy numberParser P.tab
+rowParser = P.sepBy C.numberParser P.tab
 
 fileParser = P.sepBy rowParser P.newline
-
-testLine = "j inc 19"
-
-wordParser = P.many P.anyChar
-
-instructionParser =
-  Instr <$> (wordParser <* space) <*> (opParser <* space) <*> (numberParser)
-
-space = P.char ' '
-
-opParser = chooseOp <$> (P.choice [P.string "inc", P.string "dec"])
-  where
-    chooseOp "inc" = Inc
-    chooseOp "dec" = Dec
-
---compParser =
---  chooseOp <$> (P.choice [P.string ">=", P.string "<="])
---  where chooseOp ">=" = GE
---        chooseOp "<=" = LE
-data Instr =
-  Instr String
-        Op
-        Int
-  deriving (Show)
-
-data Op
-  = Inc
-  | Dec
-  deriving (Show)
-
-data Comp
-  = GE
-  | LE
-  deriving (Show)
