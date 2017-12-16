@@ -31,19 +31,19 @@ exchangeParser =
 partnerParser =
   Partner <$> (P.char 'p' *> P.anyChar) <*> (P.char '/' *> P.anyChar)
 
+progs = V.fromList ['a'..'p']
+
 partOne = do
   moves <- parse
-  let progs = V.fromList ['a' .. 'p']
   return $ fmap (\m -> doDance m progs M.empty) moves
 
 partTwo = do
   moves <- parse
-  let progs = V.fromList ['a' .. 'p']
-      cache = M.empty
+  let cache = M.empty
   return
     $ fmap V.toList
     $ fmap fst
-    $ fmap (\m -> foldl' (\(p, c) _ -> doDance m p c) (progs, cache) [1..1000000000]) moves
+    $ fmap (\m -> foldl' (\(p, c) _ -> doDance m p c) (progs, cache) [1..1e9]) moves
 
 doDance moves progs cache =
   case M.lookup progs cache of
