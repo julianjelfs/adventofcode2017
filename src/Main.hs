@@ -6,8 +6,12 @@ import           Day7
 import           Day13
 import           Day14
 import           Day15
+import           Day16
 
 main :: IO ()
 main = do
   --putStrLn ("Solution " ++ (show Day15.partOne))
-  putStrLn ("Solution " ++ (show Day15.partTwo))
+  p2 <- Day16.partTwo
+  case p2 of
+    Left _ -> putStrLn "Error"
+    Right s -> putStrLn $ "Solution: " ++ s

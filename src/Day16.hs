@@ -1,10 +1,11 @@
 module Day16 where
 
-import Common
-import Data.List.Split
+import qualified Common as C
+import Data.List
 import qualified Data.Vector as V
-import Text.Parsec as P
-import Text.ParserCombinators.Parsec (Parser)
+import qualified Text.Parsec as P
+import Control.Applicative
+import qualified Data.Map.Strict as M
 
 data Move
   = Spin Int
@@ -16,17 +17,51 @@ data Move
 
 parse = do
   inp <- readFile "data/day16.txt"
-  return $ Common.parse movesParser inp
+  return $ C.parse movesParser inp
 
 movesParser = P.sepBy moveParser (P.char ',')
 
 moveParser = P.choice [spinParser, exchangeParser, partnerParser]
 
-spinParser = Spin <$> (P.char 's' *> Common.numberParser)
+spinParser = Spin <$> (P.char 's' *> C.numberParser)
 
 exchangeParser =
-  Exchange <$> (P.char 'x' *> Common.numberParser) <*>
-  (P.char '/' *> Common.numberParser)
+  Exchange <$> (P.char 'x' *> C.numberParser) <*> (P.char '/' *> C.numberParser)
 
 partnerParser =
   Partner <$> (P.char 'p' *> P.anyChar) <*> (P.char '/' *> P.anyChar)
+
+partOne = do
+  moves <- parse
+  let progs = V.fromList ['a' .. 'p']
+  return $ fmap (\m -> doDance m progs M.empty) moves
+
+partTwo = do
+  moves <- parse
+  let progs = V.fromList ['a' .. 'p']
+      cache = M.empty
+  return
+    $ fmap V.toList
+    $ fmap fst
+    $ fmap (\m -> foldl' (\(p, c) _ -> doDance m p c) (progs, cache) [1..1000000000]) moves
+
+doDance moves progs cache =
+  case M.lookup progs cache of
+    Just p -> (p, cache)
+    Nothing ->
+      let p = foldl' applyMove progs moves
+      in (p, M.insert progs p cache)
+
+applyMove progs (Spin n) =
+  let l = length progs
+      h = V.take (l - n) progs
+      t = V.drop (l - n) progs
+  in t V.++ h
+applyMove progs (Exchange x y) =
+  let ix = progs V.! x
+      iy = progs V.! y
+  in progs V.// [(x, iy), (y, ix)]
+applyMove progs (Partner x y) =
+  case liftA2 Exchange (V.elemIndex x progs) (V.elemIndex y progs) of
+    Just x -> applyMove progs x
+    Nothing -> progs
