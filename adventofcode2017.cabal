@@ -35,6 +35,7 @@ executable adventofcode
                    , Day14
                    , Day15
                    , Day16
+                   , Day17
                    , Common
   main-is:           Main.hs
   build-depends:       base >= 4.7 && < 5
