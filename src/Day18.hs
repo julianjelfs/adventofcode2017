@@ -5,6 +5,9 @@ import qualified Data.Map.Strict as M
 import qualified Text.Parsec as P
 import Data.Char
 import qualified Data.Vector as V
+import Control.Concurrent (forkIO, threadDelay)
+import Control.Concurrent.MVar (newEmptyMVar, takeMVar, putMVar)
+import Data.Foldable (for_)
 
 data InstrType
   = Number Int
@@ -73,3 +76,40 @@ partOne = do
   instr <- parse
   let reg = M.empty
   return $ fmap (\i -> processInstruction i reg 0 0) instr
+
+printMsgFrom name = for_ [1..3] printMsg
+    where printMsg i = do
+            sleepMs 1
+            putStrLn (name ++ " number " ++ show i)
+
+testingAsync = do
+    printMsgFrom "main"
+
+    -- Fork a new thread to do some work in the background.
+    forkIO (printMsgFrom "fork")
+
+    -- Fork another thread using an inline function!
+    forkIO (do
+        putStrLn "starting!"
+        sleepMs 5
+        putStrLn "ending!")
+
+    -- Wait for threads to finish.
+    sleepMs 10
+
+testMVar = do
+    result <- newEmptyMVar
+
+    forkIO (do
+        sleepMs 5
+        putStrLn "Calculated result!"
+        putMVar result 42)
+
+    putStrLn "Waiting..."
+    value <- takeMVar result
+    putStrLn ("The answer is: " ++ show value)
+
+
+sleepMs n = threadDelay (n * 1000)
+
+-- tutorial here https://github.com/crabmusket/haskell-simple-concurrency/blob/master/src/tutorial.md
