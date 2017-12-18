@@ -17,32 +17,26 @@ data Instr
   | Mul InstrType InstrType
   | Mod InstrType InstrType
   | Rcv InstrType
-  | Jgz InstrType
+  | Jgz InstrType InstrType
   deriving Show
 
 parse = do
   inp <- readFile "data/day18.txt"
-  return $ fmap (C.parse instrParser) $ lines inp
+  return $ C.parse (P.sepBy instrParser (P.char '\n')) inp
 
 targetParser =
-  P.choice [(Register <$> P.anyChar), (Number <$> C.numberParser)]
+  P.choice [(Number <$> C.numberParser), (Register <$> P.anyChar)]
 
 instrParser =
   P.choice
     [ P.try $ P.string "snd " *> (Snd <$> targetParser)
-    , P.string "set " *> (Set <$> (targetParser <* P.char ' ') <*> targetParser)
+    , P.try $ P.string "set " *> (Set <$> (targetParser <* P.char ' ') <*> targetParser)
+    , P.try $ P.string "add " *> (Add <$> (targetParser <* P.char ' ') <*> targetParser)
+    , P.try $ P.string "mul " *> (Mul <$> (targetParser <* P.char ' ') <*> targetParser)
+    , P.try $ P.string "mod " *> (Mod <$> (targetParser <* P.char ' ') <*> targetParser)
+    , P.try $ P.string "rcv " *> (Rcv <$> targetParser)
+    , P.try $ P.string "jgz " *> (Jgz <$> (targetParser <* P.char ' ') <*> targetParser)
     ]
-
---instrParser =
---  P.choice
---    [ Snd <$> (P.string "snd ") <*> targetParser
---    , Set <$> (P.string "set ") <*> targetParser <* P.char ' ' <*> targetParser
---    , Add <$> (P.string "add ") <*> targetParser <* P.char ' ' <*> targetParser
---    , Mul <$> (P.string "mul ") <*> targetParser <* P.char ' ' <*> targetParser
---    , Mod <$> (P.string "mod ") <*> targetParser <* P.char ' ' <*> targetParser
---    , Rcv <$> (P.string "rcv ") <*> targetParser
---    , Jgz <$> (P.string "jgz ") <*> targetParser <* P.char ' ' <*> targetParser
---    ]
 
 partOne = do
   instr <- parse
