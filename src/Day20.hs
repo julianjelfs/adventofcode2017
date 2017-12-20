@@ -33,10 +33,15 @@ partOne = do
   particles <- parse
   return $ (fmap . fmap) snd $ fmap (\p -> scanl' tick (p, 1000000000) [0 .. 1000]) particles
 
+partTwo = do
+  particles <- parse
+  return $ (fmap . fmap) (length . fst) $ fmap (\p -> scanl' tick (p, 1000000000) [0 .. 1000]) particles
+
 tick :: ([Particle], Int) -> Int -> ([Particle], Int)
 tick (particles, closest) _ =
   let p = tickParticle <$> particles
-  in (p, fst $ findClosest (zip [0 ..] p))
+      dd = dedupe $ zip [0 ..] p
+  in (snd <$> dd, fst $ findClosest dd)
 
 tickParticle :: Particle -> Particle
 tickParticle ((px, py, pz), (vx, vy, vz), acc@(ax, ay, az)) =
@@ -47,6 +52,17 @@ tickParticle ((px, py, pz), (vx, vy, vz), acc@(ax, ay, az)) =
       py' = py + vy'
       pz' = pz + vz'
   in ((px', py', pz'), (vx', vy', vz'), acc)
+
+dedupe particles =
+    let sorted = sortParticlesByPos particles
+        groups = groupParticles sorted
+    in sortParticlesByIndex $ concat $ filter (\g -> length g == 1) groups
+
+sortParticlesByPos = sortBy (\(i, (p, _, _)) (i1, (p1, _, _)) -> compare p p1)
+
+sortParticlesByIndex = sortBy (comparing fst)
+
+groupParticles = groupBy (\(i, (p, _, _)) (i1, (p1, _, _)) -> p == p1)
 
 findClosest particles = minimumBy (comparing snd) $ distance <$> particles
 
