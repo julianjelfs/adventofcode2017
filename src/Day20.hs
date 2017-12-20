@@ -28,17 +28,15 @@ tuplify _ = error "unexpected format"
 vecParser =
   P.between (P.char '<') (P.char '>') (P.sepBy C.numberParser (P.char ','))
 
-partOne = do
-  particles <- parse
-  return $
-    (fmap . fmap) snd $
-    fmap (\p -> scanl' tick (p, 1000000000) [0 .. 1000]) particles
+partOne =
+  solve $ (fmap . fmap) snd
 
-partTwo = do
+partTwo =
+  solve $ (fmap . fmap) (length . fst)
+
+solve extractResults = do
   particles <- parse
-  return $
-    (fmap . fmap) (length . fst) $
-    fmap (\p -> scanl' tick (p, 1000000000) [0 .. 1000]) particles
+  return $ extractResults $ fmap (\p -> scanl' tick (p, 0) [0 .. 1000]) particles
 
 tick :: ([Particle], Int) -> Int -> ([Particle], Int)
 tick (particles, closest) _ =
@@ -47,7 +45,7 @@ tick (particles, closest) _ =
   where tickAndDedupe = dedupe . (zip [0..]) . (fmap tickParticle)
 
 tickParticle :: Particle -> Particle
-tickParticle (p@(px, py, pz), v@(vx, vy, vz), a@(ax, ay, az)) =
+tickParticle (p, v, a) =
   let v1 = tuple $ sum v <> sum a
       p1 = tuple $ sum p <> sum v1
   in (p1, v1, a)
