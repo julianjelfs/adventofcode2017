@@ -31,13 +31,12 @@ vecParser =
 
 partOne = do
   particles <- parse
-  return $ fmap snd $ fmap (\p -> foldl' tick (p, 1000000000) [0 .. 1000]) particles
+  return $ (fmap . fmap) snd $ fmap (\p -> scanl' tick (p, 1000000000) [0 .. 1000]) particles
 
 tick :: ([Particle], Int) -> Int -> ([Particle], Int)
 tick (particles, closest) _ =
   let p = tickParticle <$> particles
-      (i, c) = findClosest (zip [0 ..] p)
-  in (p, min closest c)
+  in (p, fst $ findClosest (zip [0 ..] p))
 
 tickParticle :: Particle -> Particle
 tickParticle ((px, py, pz), (vx, vy, vz), acc@(ax, ay, az)) =
