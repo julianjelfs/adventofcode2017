@@ -76,7 +76,14 @@ solve n = do
     return $ fmap (\r -> sum $ toList $ head $ drop n $ iterate (splitMatrix r) initial) rules
 
 transform rules m =
-    case filter patternMatch rules of
-        [] -> m     --no matches no transform
-        (h:_) -> snd h  --match return the result
+    case foldl' (\match r@(patterns, result) ->
+                case match of
+                    Nothing -> if patternMatch r then Just result else Nothing
+                    x -> x
+            ) Nothing rules of
+        Nothing -> m
+        Just r -> r
+--    case filter patternMatch rules of
+--        [] -> m     --no matches no transform
+--        (h:_) -> snd h  --match return the result
     where patternMatch (patterns, result) = any (\p -> p == m) patterns
