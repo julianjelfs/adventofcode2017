@@ -8,7 +8,11 @@ import           Day14
 import           Day15
 import           Day16
 import           Day17
+import           Day21
 
 main :: IO ()
 main = do
-  putStrLn ("Solution " ++ (show Day17.partTwo))
+    res <- Day21.solve 18
+    case res of
+        Right n -> putStrLn ("Solution " ++ (show n))
+        Left _ -> putStrLn "something went wrong"
