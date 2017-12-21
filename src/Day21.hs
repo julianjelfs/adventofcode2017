@@ -60,13 +60,14 @@ transform rules m =
 
 splitMatrix rules m
   | length m < 4 = transform rules m
-  | mod (length m) 2 == 0 = splitIntoChunks rules m 2
-  | otherwise = splitIntoChunks rules m 3
+  | mod (length m) 2 == 0 = splitAndJoin rules m 2
+  | otherwise = splitAndJoin rules m 3
 
-splitIntoChunks rules m n =
+splitAndJoin rules m n =
   let s = split m
       t = (fmap . fmap) (transform rules) s
   in join t
   where
-    split = transpose . map (map transpose . chunksOf n . transpose) . chunksOf n
-    join = transpose . concatMap (transpose . concat)
+    chunkInner c = fmap transpose $ chunksOf n $ transpose c
+    split m = transpose $ fmap chunkInner $ chunksOf n m
+    join m = transpose $ concatMap (transpose . concat) m
