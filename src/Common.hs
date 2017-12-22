@@ -13,3 +13,7 @@ numberParser = rd <$> (plus <|> minus <|> number)
 
 parse :: Parser a -> String -> Either ParseError a
 parse parser = Text.Parsec.parse parser []
+
+--Elm style left to right fn application
+(|>) :: a -> (a -> b) -> b
+(|>) a atob = atob a
