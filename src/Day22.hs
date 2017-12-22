@@ -13,8 +13,10 @@ data NodeState
 parse = do
   inp <- readFile "data/day22.txt"
   return $
-    M.fromList $ concatMap (\(y, l) -> fmap (\(x, c) -> ((x, y), if c == '#' then Infected else Clean)) $ zip [-12 ..] l) $
-    zip [-12 ..] $ lines inp
+    M.fromList [ ((x,y), z)
+               | (y, l) <- zip [-12..] $ lines inp
+               , (x, c) <- zip [-12..] l
+               , let z = if c == '#' then Infected else Clean ]
 
 partTwo = do
   grid <- parse
@@ -54,6 +56,3 @@ move U (x,y) = (x,y-1)
 move R (x,y) = (x+1,y)
 move D (x,y) = (x,y+1)
 move L (x,y) = (x-1,y)
-
-
-
