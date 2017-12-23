@@ -5,6 +5,7 @@ import Data.Char
 import qualified Data.Map.Strict as M
 import qualified Data.Vector as V
 import qualified Text.Parsec as P
+import Data.Numbers.Primes
 
 data InstrType
   = Number Int
@@ -24,6 +25,7 @@ data Program = Program
   , pos :: Int
   , finished :: Bool
   }
+  deriving Show
 
 parse = do
   inp <- readFile "data/day23.txt"
@@ -48,13 +50,13 @@ getValue reg (Register a) =
 partOne = do
   instr <- parse
   let p0 = Program M.empty 0 0 False
-  return $ fmap (runProgram p0) instr
+  return $ fmap (runProgram (p0, [])) instr
 
-runProgram p0 instr =
-  let p0' = stepProgram instr p0
-  in if (finished p0')
-       then nmuls p0'
-       else runProgram p0' instr
+runProgram (p, progs) instr =
+  let p' = stepProgram instr p
+  in if (finished p')
+       then p'
+       else runProgram (p', (p':progs)) instr
 
 stepProgram instr prog@(Program { register = register
                                 , nmuls = nmuls
@@ -80,3 +82,19 @@ binaryOp prog@(Program {pos = pos, register = register}) x y op =
   let xval = getValue register (Register x)
       yval = getValue register y
   in prog {register = M.insert x (op xval yval) register, pos = pos + 1}
+
+--this is what the processor is doing
+partTwo =
+  let a = 1
+      b = 67 * 100 + 100000
+      c = b + 17000
+      g = b - c
+  in go (g, 0, b, c)
+  where
+    go (g, h, b, c)
+      | g == 0 = h
+      | otherwise =
+          if isPrime b then
+            go (b - c, h, b + 17, c)
+          else
+            go (b - c, h + 1, b + 17, c)

@@ -41,6 +41,7 @@ executable adventofcode
                    , Day20
                    , Day21
                    , Day22
+                   , Day23
                    , Common
   main-is:           Main.hs
   build-depends:       base >= 4.7 && < 5
@@ -54,6 +55,7 @@ executable adventofcode
                      , transformers
                      , either
                      , matrix
+                     , primes
   default-language:    Haskell2010
 
 source-repository head
