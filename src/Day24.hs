@@ -21,28 +21,25 @@ buildBridges port bridge components =
   let ms = matches port components
   in case length ms == 0 of
       True -> [bridge]
-      False ->
-        concatMap (\m@(p1, p2) -> buildBridges (if port == p1 then p2 else p1) (bridge ++ [m]) (S.delete m components)) ms
+      False -> concatMap buildMatch ms
+  where buildMatch m@(p1, p2) =
+          let p = (if port == p1 then p2 else p1)
+          in buildBridges p (bridge ++ [m]) (S.delete m components)
 
-partOne = do
-  components <- parse
-  return $ fmap (strongest . (buildBridges 0 [])) components
+strongestBridge = maximum . (fmap strength)
 
-strongest =
-  maximum . (fmap strength)
+strength = sum . fmap (\(a,b) -> a+b)
 
-strength =
-  sum . fmap (\(a,b) -> a+b)
-
-maxlength bridges =
-  maximum $ (fmap length bridges)
-
-partTwo = do
-  components <- parse
-  let bridges = fmap (\c -> buildBridges 0 [] c) components
-  return $ fmap bestBridge bridges
+maxlength bridges = maximum $ (fmap length bridges)
 
 bestBridge bridges =
   let maxl = maxlength bridges
-      longest = filter (\b -> length b == maxl) bridges
-  in strongest longest
+  in strongestBridge $ filter (\b -> length b == maxl) bridges
+
+partOne = do
+  components <- parse
+  return $ fmap (strongestBridge . (buildBridges 0 [])) components
+
+partTwo = do
+  components <- parse
+  return $ fmap (bestBridge . buildBridges 0 []) components

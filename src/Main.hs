@@ -14,5 +14,4 @@ import           Day23
 
 main :: IO ()
 main = do
-  p <- Day23.partTwo
-  putStrLn ("Solution: " ++ (show p))
+  putStrLn "advent of code"
