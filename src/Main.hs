@@ -11,7 +11,11 @@ import           Day17
 import           Day21
 import           Day22
 import           Day23
+import           Day24
 
 main :: IO ()
 main = do
-  putStrLn "advent of code"
+  a <- Day24.partOne
+  b <- Day24.partTwo
+  putStrLn ("Part One: " ++ (show a))
+  putStrLn ("Part Two: " ++ (show b))
