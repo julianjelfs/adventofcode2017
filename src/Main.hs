@@ -16,4 +16,4 @@ import           Day25
 
 main :: IO ()
 main = do
-  putStrLn ("Day25 1: " ++ (show Day25.partOne))
+  putStrLn ("Day25 1: " ++ (show Day25.solve))
