@@ -12,10 +12,8 @@ import           Day21
 import           Day22
 import           Day23
 import           Day24
+import           Day25
 
 main :: IO ()
 main = do
-  a <- Day24.partOne
-  b <- Day24.partTwo
-  putStrLn ("Part One: " ++ (show a))
-  putStrLn ("Part Two: " ++ (show b))
+  putStrLn ("Day25 1: " ++ (show Day25.partOne))
